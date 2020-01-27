@@ -24,6 +24,7 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 		use = np.where(data.Date == ud[i])[0]
 		utc[use] += dd*24.0
 	
+	
 	#filter data
 	if (not high is None) or (not low is None):
 		dt,ct = np.unique((utc[1:]-utc[:-1])*3600.0,return_counts=True)
@@ -43,24 +44,29 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 	#cut the data down to within ut range
 	if not ut is None:
 		if np.size(Date) == 2:
-			use = np.where(((data.Date == Date[0]) & (data.ut >= ut[0])) |
-							((data.Date > Date[0]) & (data.Date < Date[1])) |
-							((data.Date == Date[1]) & (data.ut <= ut[1])))[0]
+		#	use = np.where(((data.Date == Date[0]) & (data.ut >= ut[0])) |
+		#					((data.Date > Date[0]) & (data.Date < Date[1])) |
+		#					((data.Date == Date[1]) & (data.ut <= ut[1])))[0]
+			utr = [ut[0],ut[1]+TT.DateDifference(Date[0],Date[1])*24.0]
+			use = np.where((utc >= utr[0]) & (utc <= utr[1]))[0]
+			
 		else:
 			use = np.where((data.ut >= ut[0]) & (data.ut <= ut[1]))[0]
+			utr = ut
 		utc = utc[use]
 		data = data[use]
 		Bx = Bx[use]
 		By = By[use]
 		Bz = Bz[use]
-	utrange = [np.min(utc),np.max(utc)]
+	#utrange = [np.min(utc),np.max(utc)]
+	utrange = utr
 	
 	#component data and color
 	Bm = np.sqrt(Bx**2 + By**2 + Bz**2)
 	cmpcol = {	'Bx':	(Bx,[1.0,0.0,0.0],'$B_x$'),
 				'By':	(By,[0.0,1.0,0.0],'$B_y$'),
 				'Bz':	(Bz,[0.0,0.0,1.0],'$B_z$'),
-				'Bm':	(Bm,[0.0,0.0,0.0],'$|B|$')}
+				'Bm':	(Bm,[0.0,0.0,0.0],'$\pm|B|$')}
 	
 	#create the plot window and axes
 	if fig is None:
