@@ -4,7 +4,7 @@ from .ReadData import ReadData
 import DateTimeTools as TT
 from .UTPlotLabel import UTPlotLabel
 
-def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None):
+def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False):
 	'''
 	
 	'''
@@ -77,10 +77,13 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 		ax.plot(utc,B,color=col,label=lab)
 		if c == 'Bm':
 			ax.plot(utc,-B,color=col)
+	#ylabel
+	ax.set_ylabel('$B$ (nT)')
 	
 	#sort UT axis
 	ax.set_xlim(utrange)
 	UTPlotLabel(ax,'x')
+	ax.set_xlabel('UT')
 	
 	#add the title
 	ax.text(0.02,0.95,title,transform=ax.transAxes)
