@@ -9,3 +9,4 @@ if Globals.Stations is None:
 from ._ReadBinary import _ReadBinary
 from .ReadData import ReadData
 from .PlotData import PlotData
+from .GetStationInfo import GetStationInfo

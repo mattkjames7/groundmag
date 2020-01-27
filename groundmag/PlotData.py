@@ -3,14 +3,17 @@ import matplotlib.pyplot as plt
 from .ReadData import ReadData
 import DateTimeTools as TT
 from .UTPlotLabel import UTPlotLabel
+from .GetStationInfo import GetStationInfo
 
 def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False):
 	'''
 	
 	'''
 	
+	
 	#create title string
-	title = Station.upper()
+	stn = GetStationInfo(Station)
+	title = Station.upper() + ' (mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat,stn.mlon)
 	
 	#Read data
 	data = ReadData(Station,Date)
@@ -36,7 +39,7 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 		Bx = TT.lsfilter(data.Bx,high,low,inter)
 		By = TT.lsfilter(data.By,high,low,inter)
 		Bz = TT.lsfilter(data.Bz,high,low,inter)
-		title += ': low = {:3.1f} s, high = {:3.1f} s'.format(np.float32(low),np.float32(high))
+		title += '\nFiltered: low = {:3.1f} s, high = {:3.1f} s'.format(np.float32(low),np.float32(high))
 	else:
 		Bx,By,Bz = data.Bx,data.By,data.Bz
 
@@ -87,12 +90,15 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 	ax.set_ylabel('$B$ (nT)')
 	
 	#sort UT axis
-	ax.set_xlim(utrange)
-	UTPlotLabel(ax,'x')
-	ax.set_xlabel('UT')
+	if nox:
+		ax.set_xtick
+	else:
+		ax.set_xlim(utrange)
+		UTPlotLabel(ax,'x')
+		ax.set_xlabel('UT')
 	
 	#add the title
-	ax.text(0.02,0.95,title,transform=ax.transAxes)
+	ax.text(0.02,0.97,title,transform=ax.transAxes,va='top')
 	
 	#legend
 	ax.legend()

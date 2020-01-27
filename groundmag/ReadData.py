@@ -16,8 +16,9 @@ def ReadData(Station,Date):
 		dates = []
 		date = Date[0]
 		while date <= Date[1]:
-			date = TT.PlusDay(date)
 			dates.append(date)
+			date = TT.PlusDay(date)
+			
 		nd = np.size(dates)
 		
 	#now load each file
@@ -27,12 +28,13 @@ def ReadData(Station,Date):
 		#check if this file is already loaded
 		label = '{:08d}-{:s}'.format(dates[i],Station.upper())
 		
-		if label in keys:
-			#retrieve this date from memory
-			tmp[i] = Globals.Data[label]
-		else:
+		if not label in keys:
 			#load the file
-			tmp[i] = _ReadBinary(Station.upper(),dates[i])
+			Globals.Data[label] = _ReadBinary(Station.upper(),dates[i])
+		
+		#retrieve this date from memory
+		tmp[i] = Globals.Data[label]
+
 	
 	#now to combine dates
 	if nd == 1:
