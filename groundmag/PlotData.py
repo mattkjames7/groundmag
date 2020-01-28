@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from .ReadData import ReadData
 import DateTimeTools as TT
 from .UTPlotLabel import UTPlotLabel
 from .GetStationInfo import GetStationInfo
+from .GetData import GetData
 
-def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False):
+def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False,useytitle=False,nolegend=False):
 	'''
 	
 	'''
@@ -13,63 +13,42 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 	
 	#create title string
 	stn = GetStationInfo(Station)
-	title = Station.upper() + ' (mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat,stn.mlon)
+	title = Station.upper()
+	pos = '(mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat,stn.mlon)
 	
 	#Read data
-	data = ReadData(Station,Date)
-	
-	#create a continuous time axis
-	ud = np.unique(data.Date)
-	nd = ud.size
-	utc = np.copy(data.ut)
-	for i in range(0,nd):
-		dd = TT.DateDifference(ud[0],ud[i])
-		use = np.where(data.Date == ud[i])[0]
-		utc[use] += dd*24.0
+	data = GetData(Station,Date,ut,high,low)
 	
 	
-	#filter data
+	#check if data are filtered
 	if (not high is None) or (not low is None):
-		dt,ct = np.unique((utc[1:]-utc[:-1])*3600.0,return_counts=True)
+		dt,ct = np.unique((data.utc[1:]-data.utc[:-1])*3600.0,return_counts=True)
 		inter = dt[ct.argmax()]
 		if low is None:
 			low = inter
 		if high is None:
 			high = inter
-		Bx = TT.lsfilter(data.Bx,high,low,inter)
-		By = TT.lsfilter(data.By,high,low,inter)
-		Bz = TT.lsfilter(data.Bz,high,low,inter)
-		title += '\nFiltered: low = {:3.1f} s, high = {:3.1f} s'.format(np.float32(low),np.float32(high))
+		filt = 'Filtered: low = {:3.1f} s, high = {:3.1f} s'.format(np.float32(low),np.float32(high))
 	else:
-		Bx,By,Bz = data.Bx,data.By,data.Bz
+		filt = None
 
 	
 	#cut the data down to within ut range
-	if not ut is None:
-		if np.size(Date) == 2:
-		#	use = np.where(((data.Date == Date[0]) & (data.ut >= ut[0])) |
-		#					((data.Date > Date[0]) & (data.Date < Date[1])) |
-		#					((data.Date == Date[1]) & (data.ut <= ut[1])))[0]
-			utr = [ut[0],ut[1]+TT.DateDifference(Date[0],Date[1])*24.0]
-			use = np.where((utc >= utr[0]) & (utc <= utr[1]))[0]
-			
-		else:
-			use = np.where((data.ut >= ut[0]) & (data.ut <= ut[1]))[0]
-			utr = ut
-		utc = utc[use]
-		data = data[use]
-		Bx = Bx[use]
-		By = By[use]
-		Bz = Bz[use]
-	#utrange = [np.min(utc),np.max(utc)]
-	utrange = utr
+	if ut is None:
+		ut = [0.0,24.0]
 	
-	#component data and color
-	Bm = np.sqrt(Bx**2 + By**2 + Bz**2)
-	cmpcol = {	'Bx':	(Bx,[1.0,0.0,0.0],'$B_x$'),
-				'By':	(By,[0.0,1.0,0.0],'$B_y$'),
-				'Bz':	(Bz,[0.0,0.0,1.0],'$B_z$'),
-				'Bm':	(Bm,[0.0,0.0,0.0],'$\pm|B|$')}
+	if np.size(Date) == 2:
+		utr = [ut[0],ut[1]+TT.DateDifference(Date[0],Date[1])*24.0]
+	else:
+		utr = ut
+
+
+	
+	#component label and color
+	cmpcol = {	'Bx':	([1.0,0.0,0.0],'$B_x$'),
+				'By':	([0.0,1.0,0.0],'$B_y$'),
+				'Bz':	([0.0,0.0,1.0],'$B_z$'),
+				'Bm':	([0.0,0.0,0.0],'$\pm|B|$')}
 	
 	#create the plot window and axes
 	if fig is None:
@@ -82,26 +61,33 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 		comp = [comp]
 	nc = np.size(comp)
 	for c in comp:
-		B,col,lab = cmpcol[c]
-		ax.plot(utc,B,color=col,label=lab)
+		B = data[c]
+		col,lab = cmpcol[c]
+		ax.plot(data.utc,B,color=col,label=lab)
 		if c == 'Bm':
-			ax.plot(utc,-B,color=col)
-	#ylabel
-	ax.set_ylabel('$B$ (nT)')
+			ax.plot(data.utc,-B,color=col)
 	
 	#sort UT axis
+	ax.set_xlim(utr)
 	if nox:
-		ax.set_xtick
+		ax.xaxis.set_visible(False)
 	else:
-		ax.set_xlim(utrange)
 		UTPlotLabel(ax,'x')
 		ax.set_xlabel('UT')
 	
 	#add the title
-	ax.text(0.02,0.97,title,transform=ax.transAxes,va='top')
+	if useytitle:
+		ax.set_ylabel(title + '\n$B$ (nT)')	
+		ax.text(0.02,0.97,pos,transform=ax.transAxes,va='top')
+	else:
+		ax.set_ylabel('$B$ (nT)')
+		ax.text(0.02,0.97,title+' '+pos,transform=ax.transAxes,va='top')
+		
+	if not filt is None:
+		ax.text(0.02,0.03,filt,transform=ax.transAxes,va='bottom')
 	
 	#legend
-	ax.legend()
-	
+	if not nolegend:
+		ax.legend(loc='upper right')
 	
 	return ax

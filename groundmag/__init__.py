@@ -10,3 +10,7 @@ from ._ReadBinary import _ReadBinary
 from .ReadData import ReadData
 from .PlotData import PlotData
 from .GetStationInfo import GetStationInfo
+from .PlotChain import PlotChain
+from .GetData import GetData
+from .Spectrum import Spectrum
+from .PlotSpectrum import PlotSpectrum
