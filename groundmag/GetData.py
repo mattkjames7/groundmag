@@ -2,10 +2,10 @@ import numpy as np
 from .ReadData import ReadData
 import DateTimeTools as TT
 
-def GetData(Station,Date,ut=None,high=None,low=None):
+def GetData(Station,Date,ut=None,high=None,low=None,coords='hdz'):
 	
 	#Read data
-	data = ReadData(Station,Date)
+	data = ReadData(Station,Date,coords)
 	
 	#create output array
 	dtype = [('Date','int32'),('ut','float64'),('utc','float64'),

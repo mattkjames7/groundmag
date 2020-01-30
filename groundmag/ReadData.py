@@ -2,8 +2,10 @@ import numpy as np
 from . import Globals
 import DateTimeTools as TT
 from ._ReadBinary import _ReadBinary
+from .GetStationInfo import GetStationInfo
+from .xyz2hdz import xyz2hdz
 
-def ReadData(Station,Date):
+def ReadData(Station,Date,coords='hdz'):
 	'''
 	
 	'''
@@ -26,11 +28,22 @@ def ReadData(Station,Date):
 	keys = list(Globals.Data.keys())
 	for i in range(0,nd):
 		#check if this file is already loaded
-		label = '{:08d}-{:s}'.format(dates[i],Station.upper())
+		label = '{:08d}-{:s}-{:s}'.format(dates[i],Station.upper(),coords.upper())
 		
 		if not label in keys:
 			#load the file
-			Globals.Data[label] = _ReadBinary(Station.upper(),dates[i])
+			tmpd = _ReadBinary(Station.upper(),dates[i])
+			
+			if coords.upper() == 'XYZ':
+				#do nothing - data should be in this system
+				pass
+			else:
+				#convert to hdz
+				stat = GetStationInfo(Station,dates[i])
+				tmpd.Bx,tmpd.By,tmpd.Bz = xyz2hdz(tmpd.Bx,tmpd.By,tmpd.Bz,dates[i],stat.glat[0],stat.glon[0],alt=0.0)
+				
+				
+			Globals.Data[label] = tmpd
 		
 		#retrieve this date from memory
 		tmp[i] = Globals.Data[label]
