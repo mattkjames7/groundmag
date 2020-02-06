@@ -11,7 +11,7 @@ def xyz2hdz(x,y,z,Date,lat,lon,alt=0.0):
 
 	#get the year
 	year = DateToYear(Date)
-	print(Date,year)
+
 	
 	#find unique year/lat/lon combinations
 	n = np.size(x)
@@ -21,7 +21,7 @@ def xyz2hdz(x,y,z,Date,lat,lon,alt=0.0):
 	dlla[2] = lon
 	dlla[3] = alt
 	udlla = np.unique(dlla,axis=1)
-	print(udlla)
+
 	#get the declination
 	nu = np.size(udlla[0])
 	dec = np.zeros(n,dtype='float32')

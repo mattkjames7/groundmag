@@ -5,7 +5,7 @@ from .UTPlotLabel import UTPlotLabel
 from .GetStationInfo import GetStationInfo
 from .GetData import GetData
 
-def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False,useytitle=False,nolegend=False):
+def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False,useytitle=False,nolegend=False,coords='hdz'):
 	'''
 	
 	'''
@@ -14,10 +14,10 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 	#create title string
 	stn = GetStationInfo(Station)
 	title = Station.upper()
-	pos = '(mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat,stn.mlon)
+	pos = '(mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat[0],stn.mlon[0])
 	
 	#Read data
-	data = GetData(Station,Date,ut,high,low)
+	data = GetData(Station,Date,ut,high,low,coords=coords)
 	
 	
 	#check if data are filtered
@@ -45,10 +45,16 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 
 	
 	#component label and color
-	cmpcol = {	'Bx':	([1.0,0.0,0.0],'$B_x$'),
-				'By':	([0.0,1.0,0.0],'$B_y$'),
-				'Bz':	([0.0,0.0,1.0],'$B_z$'),
-				'Bm':	([0.0,0.0,0.0],'$\pm|B|$')}
+	if coords == 'xyz':
+		cmpcol = {	'Bx':	([1.0,0.0,0.0],'$B_x$'),
+					'By':	([0.0,1.0,0.0],'$B_y$'),
+					'Bz':	([0.0,0.0,1.0],'$B_z$'),
+					'Bm':	([0.0,0.0,0.0],'$\pm|B|$')}
+	else:
+		cmpcol = {	'Bx':	([1.0,0.0,0.0],'$B_h$'),
+					'By':	([0.0,1.0,0.0],'$B_d$'),
+					'Bz':	([0.0,0.0,1.0],'$B_z$'),
+					'Bm':	([0.0,0.0,0.0],'$\pm|B|$')}
 	
 	#create the plot window and axes
 	if fig is None:
