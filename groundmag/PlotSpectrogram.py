@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import wavespec as ws
 from .GetData import GetData
 
-def PlotSpectrogram(Station,Date,wind,slip,ut=None,high=None,low=None,comp='Bx',Freq=None,Method='FFT',WindowFunction=None,Param=None,Detrend=True,FindGaps=True,GoodData=None,Quiet=True,LenW=None,fig=None,maps=[1,1,0,0],PlotType='Pow',scale=None,zlog=False,TimeAxisUnits='hh:mm',FreqAxisUnits='mHz',nox=False):
+def PlotSpectrogram(Station,Date,wind,slip,ut=None,high=None,low=None,comp='Bx',Freq=None,Method='FFT',WindowFunction=None,Param=None,Detrend=True,FindGaps=True,GoodData=None,Quiet=True,LenW=None,fig=None,maps=[1,1,0,0],PlotType='Pow',scale=None,zlog=False,TimeAxisUnits='hh:mm',FreqAxisUnits='mHz',nox=False,coords='hdz'):
 	
 	
 	#get the data
-	data = GetData(Station,Date,ut,high,low)
+	data = GetData(Station,Date,ut,high,low,coords=coords)
 	
 	
 	#plot the spectrogram

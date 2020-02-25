@@ -9,7 +9,7 @@ def PlotPolarization(Station,Date,wind,slip,ut=None,high=None,low=None,Freq=None
 	#create title string
 	stn = GetStationInfo(Station)
 	title = Station.upper()
-	pos = '(mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat,stn.mlon)
+	pos = '(mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat[0],stn.mlon[0])
 
 	#check if data are filtered
 	filt = 'Filtered: '
