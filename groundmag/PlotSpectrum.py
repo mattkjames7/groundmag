@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from .Spectrum import Spectrum
 
-def PlotSpectrum(Station,Date,ut=None,high=None,low=None,Method='FFT',WindowFunction=None,Param=None,Freq=None,comp=['Bx','By','Bz'],PlotType='power',FreqAxisUnits='Hz',fig=None,maps=[1,1,0,0]):
+def PlotSpectrum(Station,Date,ut=None,high=None,low=None,Method='FFT',WindowFunction=None,Param=None,Freq=None,comp=['Bx','By','Bz'],PlotType='power',FreqAxisUnits='Hz',fig=None,maps=[1,1,0,0],RemoveDC=True,ylog=False):
 	
 	#get the spectra
 	Freq,Pow,Amp,Pha,Real,Imag = Spectrum(Station,Date,ut,high,low,Method,WindowFunction,Param,Freq,comp)
@@ -24,6 +24,7 @@ def PlotSpectrum(Station,Date,ut=None,high=None,low=None,Method='FFT',WindowFunc
 					'imaginary':	(Imag,'Imaginary')}
 	P,ylabel = plotparams[PlotType]
 	
+
 	#create the figure
 	if fig is None:
 		fig = plt
@@ -40,7 +41,11 @@ def PlotSpectrum(Station,Date,ut=None,high=None,low=None,Method='FFT',WindowFunc
 	if nc == 1:
 		P = [P]
 	l = np.min([np.size(P[0]),np.size(f)])
+	f0 = np.where(f == 0)[0]
 	for i in range(0,nc):
+		#remove the DC component (this can screw up the plot)
+		if RemoveDC and f0.size > 0:
+			P[i][f0] = np.nan	
 		c,lab = cmpcol[comp[i]]
 		ax.plot(f[:l],P[i][:l],color=c,label=lab)
 		
@@ -50,3 +55,10 @@ def PlotSpectrum(Station,Date,ut=None,high=None,low=None,Method='FFT',WindowFunc
 	#axis labels
 	ax.set_ylabel(ylabel)
 	ax.set_xlabel('Frequency, $f$ ('+FreqAxisUnits+')')
+
+	
+	#set y scale
+	if ylog:
+		ax.set_yscale('log')
+	
+	return ax

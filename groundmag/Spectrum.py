@@ -13,6 +13,7 @@ def Spectrum(Station,Date,ut=None,high=None,low=None,Method='FFT',WindowFunction
 		dt,ct = np.unique((data.utc[1:]-data.utc[:-1])*3600.0,return_counts=True)
 		inter = dt[ct.argmax()]
 		Freq = np.arange(data.size+1,dtype='float32')/(np.float32(data.size*inter))
+		Freq = Freq[:data.size//2 + 1]
 	
 	
 	nc = np.size(comp)
@@ -23,10 +24,9 @@ def Spectrum(Station,Date,ut=None,high=None,low=None,Method='FFT',WindowFunction
 	Real = []
 	for i in range(0,nc):
 		if Method == 'FFT':
-			power,phase,Freq,fr,fi = ws.Fourier.FFT(data.utc*3600.0,data[comp[i]],WindowFunction,Param)
-			amp = np.sqrt(power)
+			power,amp,phase,fr,fi,Freq = ws.Fourier.FFT(data.utc*3600.0,data[comp[i]],WindowFunction,Param,OneSided=True)
 		else:
-			power,phase,amp,fr,fi = ws.LombScargle.LombScargle(data.utc*3600.0,data[comp[i]],Freq,'C++',WindowFunction,Param)
+			power,amp,phase,fr,fi = ws.LombScargle.LombScargle(data.utc*3600.0,data[comp[i]],Freq[:-1],'C++',WindowFunction,Param)
 		Pow.append(power)
 		Amp.append(amp)
 		Pha.append(phase)

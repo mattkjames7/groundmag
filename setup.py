@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="groundmag",
-    version="0.0.1",
+    version="0.0.2",
     author="Matthew Knight James",
     author_email="mattkjames7@gmail.com",
     description="A small package designed for reading ground magnetometer data.",
@@ -26,7 +26,7 @@ setuptools.setup(
 		'DateTimeTools',
 		'aacgmv2',
 		'pyIGRF',
-		'wavespec',
+		'wavespec>=0.0.4',
 		'RecarrayTools',
 		'PyFileIO',
 	],

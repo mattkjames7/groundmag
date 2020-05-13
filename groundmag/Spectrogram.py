@@ -11,7 +11,7 @@ def Spectrogram(Station,Date,wind,slip,ut=None,high=None,low=None,comp='Bx',Freq
 	
 	
 	#get the spectrogram
-	Nw,LenW,Freq,Spec = ws.Spectrogram.Spectrogram(data.utc*3600.0,data[comp],wind,slip,Freq,Method,WindowFunction,Param,Detrend,FindGaps,GoodData,Quiet,LenW)
+	Nw,LenW,Freq,Spec = ws.Spectrogram.Spectrogram(data.utc*3600.0,data[comp],wind,slip,Freq,Method,WindowFunction,Param,Detrend,FindGaps,GoodData,Quiet,LenW,OneSided=True)
 	
 	
 

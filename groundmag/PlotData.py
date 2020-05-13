@@ -5,7 +5,7 @@ from .UTPlotLabel import UTPlotLabel
 from .GetStationInfo import GetStationInfo
 from .GetData import GetData
 
-def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False,useytitle=False,nolegend=False,coords='hdz'):
+def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False,useytitle=False,nolegend=False,coords='hdz',RemoveMean=True):
 	'''
 	
 	'''
@@ -68,10 +68,15 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 	nc = np.size(comp)
 	for c in comp:
 		B = data[c]
+		if RemoveMean:
+			mean = np.nanmean(B)
+		else:
+			mean = 0.0
 		col,lab = cmpcol[c]
-		ax.plot(data.utc,B,color=col,label=lab)
-		if c == 'Bm':
-			ax.plot(data.utc,-B,color=col)
+		if not (c == 'Bm' and RemoveMean):
+			ax.plot(data.utc,B-mean,color=col,label=lab)
+			if c == 'Bm':
+				ax.plot(data.utc,-B,color=col)
 	
 	#sort UT axis
 	ax.set_xlim(utr)

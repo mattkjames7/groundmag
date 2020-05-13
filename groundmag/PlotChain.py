@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from .PlotData import PlotData
 
-def PlotChain(Stations,Date,ut=None,fig=None,comp=['Bx','By','Bz','Bm'],high=None,low=None,useytitle=False,nolegend=False,figsize=(6,4),ylim=None,coords='hdz'):
+def PlotChain(Stations,Date,ut=None,fig=None,comp=['Bx','By','Bz','Bm'],high=None,low=None,useytitle=False,nolegend=False,figsize=(6,4),ylim=None,coords='hdz',RemoveMean=True):
 	'''
 	'''
 	#create the plot window if it doesn't already exist
@@ -16,7 +16,7 @@ def PlotChain(Stations,Date,ut=None,fig=None,comp=['Bx','By','Bz','Bm'],high=Non
 	#loop through each plot
 	for i in range(0,ns):
 		nox = i < (ns-1)
-		ax = PlotData(Stations[i],Date,ut=ut,fig=fig,maps=[1,ns,0,i],comp=comp,high=high,low=low,nox=nox,useytitle=useytitle,nolegend=nolegend,coords=coords)
+		ax = PlotData(Stations[i],Date,ut=ut,fig=fig,maps=[1,ns,0,i],comp=comp,high=high,low=low,nox=nox,useytitle=useytitle,nolegend=nolegend,coords=coords,RemoveMean=RemoveMean)
 		if not ylim is None:
 			ax.set_ylim(ylim)
 		
