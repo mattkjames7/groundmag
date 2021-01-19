@@ -22,3 +22,4 @@ from .PlotPolarizationChain import PlotPolarizationChain
 from .xyz2hdz import xyz2hdz
 from .hdz2xyz import hdz2xyz
 from .DateToYear import DateToYear
+from .GetDataAvailability import GetDataAvailability
