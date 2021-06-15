@@ -5,7 +5,7 @@ from ._ReadBinary import _ReadBinary
 from .GetStationInfo import GetStationInfo
 from .xyz2hdz import xyz2hdz
 
-def ReadData(Station,Date,coords='hdz'):
+def ReadData(Station,Date,coords='hdz',Store=False):
 	'''
 	
 	'''
@@ -15,14 +15,10 @@ def ReadData(Station,Date,coords='hdz'):
 		dates = np.array([Date])
 		nd = 1
 	else:
-		dates = []
-		date = Date[0]
-		while date <= Date[1]:
-			dates.append(date)
-			date = TT.PlusDay(date)
+		dates = TT.ListDates(np.min(Date),np.max(Date))
 			
 		nd = np.size(dates)
-		
+
 	#now load each file
 	tmp = [object]*nd
 	keys = list(Globals.Data.keys())
@@ -42,11 +38,13 @@ def ReadData(Station,Date,coords='hdz'):
 				stat = GetStationInfo(Station,dates[i])
 				tmpd.Bx,tmpd.By,tmpd.Bz = xyz2hdz(tmpd.Bx,tmpd.By,tmpd.Bz,dates[i],stat.glat[0],stat.glon[0],alt=0.0)
 				
+			if Store:		
+				Globals.Data[label] = tmpd
 				
-			Globals.Data[label] = tmpd
-		
-		#retrieve this date from memory
-		tmp[i] = Globals.Data[label]
+			tmp[i] = tmpd
+		else:
+			#retrieve this date from memory
+			tmp[i] = Globals.Data[label]
 
 	
 	#now to combine dates

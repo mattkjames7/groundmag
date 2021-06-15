@@ -17,6 +17,6 @@ def GetStationInfo(Station=None,Date=None):
 		yr,mn,dy = TT.DateSplit(Date)
 		dt = datetime.datetime(year=yr,month=mn,day=dy)
 		for i in range(out.size):
-			out.mlat[i],out.mlon[i] = aacgmv2.convert(out.glat[i],out.glon[i],0.0,dt,False)
+			out.mlat[i],out.mlon[i],_ = aacgmv2.convert_latlon(out.glat[i],out.glon[i],0.0,dt,method_code='G2A')
 			
 	return out

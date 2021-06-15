@@ -38,9 +38,9 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 		ut = [0.0,24.0]
 	
 	if np.size(Date) == 2:
-		utr = [ut[0],ut[1]+TT.DateDifference(Date[0],Date[1])*24.0]
+		utr = TT.ContUT(Date,ut)
 	else:
-		utr = ut
+		utr = TT.ContUT([Date,Date],ut)
 
 
 	
@@ -83,7 +83,7 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 	if nox:
 		ax.xaxis.set_visible(False)
 	else:
-		UTPlotLabel(ax,'x')
+		TT.DTPlotLabel(ax)
 		ax.set_xlabel('UT')
 	
 	#add the title

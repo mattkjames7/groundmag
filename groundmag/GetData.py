@@ -2,29 +2,22 @@ import numpy as np
 from .ReadData import ReadData
 import DateTimeTools as TT
 
-def GetData(Station,Date,ut=None,high=None,low=None,coords='hdz'):
+def GetData(Station,Date,ut=None,high=None,low=None,coords='hdz',Store=False):
 	
 	#Read data
-	data = ReadData(Station,Date,coords)
-	
+	data = ReadData(Station,Date,coords,Store)
+	utc = TT.ContUT(data.Date,data.ut)
+
 	#create output array
 	dtype = [('Date','int32'),('ut','float64'),('utc','float64'),
 			('Bx','float64'),('By','float64'),('Bz','float64'),('Bm','float64')]
 	out = np.recarray(data.size,dtype=dtype)
 	out.Date = data.Date
 	out.ut = data.ut
-	out.utc = data.ut
+	out.utc = utc
 	out.Bx = data.Bx
 	out.By = data.By
 	out.Bz = data.Bz
-	
-	#create a continuous time axis
-	ud = np.unique(data.Date)
-	nd = ud.size
-	for i in range(0,nd):
-		dd = TT.DateDifference(ud[0],ud[i])
-		use = np.where(data.Date == ud[i])[0]
-		out.utc[use] += dd*24.0
 	
 	
 	#filter data
@@ -42,7 +35,7 @@ def GetData(Station,Date,ut=None,high=None,low=None,coords='hdz'):
 	#cut the data down to within ut range
 	if not ut is None:
 		if np.size(Date) == 2:
-			utr = [ut[0],ut[1]+TT.DateDifference(Date[0],Date[1])*24.0]
+			utr = TT.ContUT(Date,ut)
 			use = np.where((utc >= utr[0]) & (utc <= utr[1]))[0]
 		else:
 			use = np.where((data.ut >= ut[0]) & (data.ut <= ut[1]))[0]

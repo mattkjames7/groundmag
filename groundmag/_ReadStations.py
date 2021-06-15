@@ -8,7 +8,7 @@ def _ReadStations(Network):
 	
 	'''
 	fname = Globals.StationPath + Network + '.list'
-	
+
 	dtype = [('Code','U4'),('Station','object'),('Network','object'),
 			('glat','float32'),('glon','float32'),('mlat','float32'),
 			('mlon','float32'),('L','float32')]

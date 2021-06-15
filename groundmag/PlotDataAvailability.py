@@ -80,7 +80,7 @@ def PlotDataAvailability(Stations,Date,fig=None,maps=[1,1,0,0]):
 	ax.yaxis.set_ticks(yticks)
 	ax.yaxis.set_ticklabels(yticklabels)
 	for i in range(0,ns):
-		ax.text(-0.03,(0.5 + i)/ns,Stations[i].upper(),rotation=90.0,ha='center',va='center',transform=ax.transAxes)
+		ax.text(-0.03,(0.5 + i)/ns,Stations[i].upper(),ha='center',va='center',transform=ax.transAxes)
 	
 	#plot a grid
 	#horizontal lines between stations

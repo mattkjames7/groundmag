@@ -7,20 +7,23 @@ def _ReadBinary(Station,Date):
 	Read binary mag data.
 	
 	'''
+	#create a randomized temporary path
+	tpath = Globals.TmpPath + '{:08d}/'.format(np.random.randint(0,99999999))
+	os.system('mkdir -p '+tpath)	
 	
 	#find out the input file name
 	year = Date//10000
 	ifile = Globals.DataPath + '{:04d}/{:08d}-{:s}.mag.gz'.format(year,Date,Station.upper())
 	
 	#copy file
-	tfile = Globals.TmpPath + '{:08d}-{:s}.mag.gz'.format(Date,Station.upper())
+	tfile = tpath + '{:08d}-{:s}.mag.gz'.format(Date,Station.upper())
 	os.system('cp '+ifile+' '+tfile)
 	
 	#extract the archive
 	os.system('gunzip '+tfile)
 
 	#read the binary file
-	bfile = Globals.TmpPath + '{:08d}-{:s}.mag'.format(Date,Station.upper())
+	bfile = tpath + '{:08d}-{:s}.mag'.format(Date,Station.upper())
 	dtype = [('Date','int32'),('ut','float64'),('Bx','float64'),('By','float64'),('Bz','float64')]
 	f = open(bfile,'rb')
 	n = np.fromfile(f,dtype='int32',count=1)[0]
@@ -34,5 +37,6 @@ def _ReadBinary(Station,Date):
 	
 	#remove the file
 	os.system('rm '+bfile)
+	os.system('rm -d '+tpath)
 	
 	return data
