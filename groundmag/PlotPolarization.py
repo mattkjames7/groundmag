@@ -42,9 +42,10 @@ def PlotPolarization(Station,Date,wind,slip,ut=None,high=None,low=None,Freq=None
 	
 	Dir = Spec.kz[pk.tind,pk.find]
 	
+	pol = ws.Tools.Polarization2D(Ax**2,Px,Ay**2,Py)
 
 	#plot the polarization ellipses
-	ax = ws.Tools.PlotPolarization(pk.t,Ax,Ay,Px,Py,Dir,fig=fig,maps=maps,Multiplier=Multiplier,nox=False,trange=None,TimeAxisUnits=TimeAxisUnits)
+	ax = ws.Tools.PlotPolarization(pk.t,Ax,Ay,Px,Py,Dir,fig=fig,maps=maps,Multiplier=Multiplier,nox=nox,trange=None,TimeAxisUnits=TimeAxisUnits)
 	
 	#add the title
 	if useytitle:
@@ -57,4 +58,4 @@ def PlotPolarization(Station,Date,wind,slip,ut=None,high=None,low=None,Freq=None
 		ax.text(0.02,0.03,filt,transform=ax.transAxes,va='bottom')
 	
 	
-	return ax
+	return ax,Spec,pk,pol

@@ -14,12 +14,16 @@ def PlotPolarizationChain(Stations,Date,wind,slip,ut=None,high=None,low=None,Fre
 	ns = np.size(Stations)
 	
 	#loop through each plot
+	out = {}
 	for i in range(0,ns):
 		nox = i < (ns-1)
-		ax = PlotPolarization(Stations[i],Date,wind,slip,ut=ut,high=high,low=low,Freq=Freq,comps=comps,Threshold=Threshold,Method=Method,WindowFunction=WindowFunction,Param=Param,Detrend=Detrend,FindGaps=FindGaps,fig=fig,maps=[1,ns,0,i],TimeAxisUnits=TimeAxisUnits,nox=nox,Multiplier=Multiplier,trange=trange,useytitle=useytitle)
-
+		print(nox)
+		ax,sp,pk,pl = PlotPolarization(Stations[i],Date,wind,slip,ut=ut,high=high,low=low,Freq=Freq,comps=comps,Threshold=Threshold,Method=Method,WindowFunction=WindowFunction,Param=Param,Detrend=Detrend,FindGaps=FindGaps,fig=fig,maps=[1,ns,0,i],TimeAxisUnits=TimeAxisUnits,nox=nox,Multiplier=Multiplier,trange=trange,useytitle=useytitle)
+		out[Stations[i]] = (sp,pk,pl)
 		
 	#remove space between subplots
 	fig.subplots_adjust(hspace=0.0)
 	
+	
+	return out
 	
