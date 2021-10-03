@@ -1,6 +1,6 @@
 import numpy as np
 import PyFileIO as pf
-
+import DateTimeTools as TT
 
 def _iaga_station(ss):
 
@@ -81,3 +81,47 @@ def _ReadIMAGEiaga(fname):
 	
 	return out
 	
+def _ReadIMAGE1s(fname):
+	'''
+	this is for reading the files with the name 'SSS_yyyymmdd.txt'
+	
+	'''
+	
+	dtype0 = [	('yr','int32'),
+				('mn','int32'),
+				('dy','int32'),
+				('hh','int32'),
+				('mm','int32'),
+				('ss','int32'),
+				('Bx','float64'),
+				('By','float64'),
+				('Bz','float64')]
+								
+	dtype = [	('Date','int32'),
+				('ut','float64'),
+				('Bx','float64'),
+				('By','float64'),
+				('Bz','float64')]
+	
+	data = pf.ReadASCIIData(fname,Header=False,dtype=dtype0)
+
+
+	badx = data.Bx > 90000.0
+	bady = data.By > 90000.0
+	badz = data.Bz > 90000.0
+	bad = np.where(badx | bady | badz)[0]
+	data.Bx[bad] = np.nan
+	data.By[bad] = np.nan
+	data.Bz[bad] = np.nan
+		
+	n = data.size
+	out = np.recarray(n,dtype=dtype)
+	
+	out.Date = TT.DateJoin(data.yr,data.mn,data.dy)
+	out.ut = TT.HHMMtoDec(data.hh,data.mm,data.ss)
+	
+	out.Bx = data.Bx
+	out.By = data.By
+	out.Bz = data.Bz
+
+	return out

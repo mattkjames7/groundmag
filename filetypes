@@ -1,4 +1,4 @@
-Canoput: 'yyyymmddSSSS.MAG'
+Canopus: 'yyyymmddSSSS.MAG'
 Carisma, 1s (website): 'yyyymmddSSSS.F01' (repo uses this + '.gz')
 Carisma, repo, 8 Hz: 'yyyymmddSSSS.hh'
 IMAGE, 1s: 'SSS_yyyymmdd.txt.gz'
