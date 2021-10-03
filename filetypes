@@ -3,3 +3,10 @@ Carisma, 1s (website): 'yyyymmddSSSS.F01' (repo uses this + '.gz')
 Carisma, repo, 8 Hz: 'yyyymmddSSSS.hh'
 IMAGE, 1s: 'SSS_yyyymmdd.txt.gz'
 IMAGE, 10s: 'image_yyyymmdd.iaga'
+
+IMAGE data can be downloaded from 
+https://www2.irf.se/maggraphs/iaga/ (IRF 1s)
+https://space.fmi.fi/image/plasmon/ (FMI 1s)
+
+10s data:
+'wget -q "https://space.fmi.fi/image/www/data_download_month.php?month={:s}" -O image_{:s}.iaga.tar'.format(yyyymm)

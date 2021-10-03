@@ -19,7 +19,7 @@ def _ReadCanopus(fname):
 				('Bz','float64'),
 				('nothing','object')]
 	
-	lines = pf.ReadASCIIfile(fname)
+	lines = pf.ReadASCIIFile(fname)
 	n = lines.size
 	
 	for i in range(0,n):
@@ -27,8 +27,8 @@ def _ReadCanopus(fname):
 			break
 	lines = lines[i+1:]
 	
-	data = pf.ReadASCIIData(lines,Header=False,dtype=dtype0)
-
+	data = pf.ReadASCIIData(lines.tolist(),Header=False,dtype=dtype0)
+	n = data.size
 	
 	out = np.recarray(n,dtype=dtype)
 	
@@ -120,7 +120,7 @@ def _ReadCarisma8Hz(fname):
 	n = 8*nrec
 	data = np.recarray(n,dtype=dtype)
 	
-	dt = np.arange(8)*0.125
+	dt = np.arange(8)*0.125/3600.0
 	for i in range(0,nrec):
 		i0 = i*8
 		i1 = (i+1)*8
@@ -138,12 +138,12 @@ def _ReadCarisma8Hz(fname):
 			data.By[i0 + j] = s[1]
 			data.Bz[i0 + j] = s[2]
 		
-	badx = out.Bx > 90000.0
-	bady = out.By > 90000.0
-	badz = out.Bz > 90000.0
+	badx = data.Bx > 90000.0
+	bady = data.By > 90000.0
+	badz = data.Bz > 90000.0
 	bad = np.where(badx | bady | badz)[0]
-	out.Bx[bad] = np.nan
-	out.By[bad] = np.nan
-	out.Bz[bad] = np.nan
+	data.Bx[bad] = np.nan
+	data.By[bad] = np.nan
+	data.Bz[bad] = np.nan
 		
-	return out	
+	return data	
