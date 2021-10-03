@@ -47,7 +47,7 @@ def _iaga_station(ss):
 	data.Bz[bad] = np.nan
 		
 
-	return data
+	return data,dt[0]
 
 def _ReadIMAGEiaga(fname):
 	'''
