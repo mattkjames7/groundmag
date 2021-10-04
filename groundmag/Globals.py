@@ -14,6 +14,7 @@ if not os.path.isdir(TmpPath):
 
 
 Stations = None
+DataIndex = None
 
 ctr = 0
 Data = {}

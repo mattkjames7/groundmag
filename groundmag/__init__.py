@@ -26,3 +26,7 @@ from .GetDataAvailability import GetDataAvailability
 from .PlotDataAvailability import PlotDataAvailability
 from .SaveData import SaveData
 from .Convert import ConvertDir,ConvertCanopus,ConvertCarisma1Hz,ConvertCarisma8Hz,ConvertIMAGE1Hz,ConvertIMAGEiaga
+from ._ReadBinaryFile import _ReadBinaryFile
+from .ReadDataIndex import ReadDataIndex
+from .UpdateDataIndex import UpdateDataIndex
+from .GetDataIndex import GetDataIndex

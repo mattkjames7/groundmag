@@ -15,7 +15,7 @@ def GetStationInfo(Station=None,Date=None):
 
 	if not Date is None:
 		yr,mn,dy = TT.DateSplit(Date)
-		dt = datetime.datetime(year=yr,month=mn,day=dy)
+		dt = datetime.datetime(year=yr[0],month=mn[0],day=dy[0])
 		for i in range(out.size):
 			out.mlat[i],out.mlon[i],_ = aacgmv2.convert_latlon(out.glat[i],out.glon[i],0.0,dt,method_code='G2A')
 			
