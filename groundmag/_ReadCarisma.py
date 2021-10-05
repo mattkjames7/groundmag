@@ -27,7 +27,10 @@ def _ReadCanopus(fname):
 			break
 	lines = lines[i+1:]
 	
-	data = pf.ReadASCIIData(lines.tolist(),Header=False,dtype=dtype0)
+	try:
+		data = pf.ReadASCIIData(lines.tolist(),Header=False,dtype=dtype0)
+	except:
+		return np.recarray(0,dtype=dtype)
 	n = data.size
 	
 	out = np.recarray(n,dtype=dtype)
@@ -72,10 +75,24 @@ def _ReadCarisma1Hz(fname):
 				('By','float64'),
 				('Bz','float64'),
 				('nothing','object')]
-	
-	data = pf.ReadASCIIData(fname,Header=True,dtype=dtype0)
-
-	n = data.size
+	try:
+		data = pf.ReadASCIIData(fname,Header=True,dtype=dtype0)
+		n = data.size
+	except:
+		lines = pf.ReadASCIIFile(fname)[1:]
+		n = lines.size
+		data = np.recarray(n,dtype=dtype0)
+		data.dt = np.array([l[:14] for l in lines])
+		for i in range(0,n):
+			try:
+				data.Bx[i] = np.float64(l[14:24])
+				data.By[i] = np.float64(l[24:34])
+				data.Bz[i] = np.float64(l[34:44])
+			except:
+				data.Bx[i] = np.nan
+				data.By[i] = np.nan
+				data.Bz[i] = np.nan
+			
 	out = np.recarray(n,dtype=dtype)
 	
 	out.Bx = data.Bx

@@ -16,10 +16,10 @@ def ConvertDir(indir,outdir,filetype,Compress=True):
 				'carisma8':('',ConvertCarisma8Hz),
 				'image1':('txt',ConvertIMAGE1Hz),
 				'image':('iaga',ConvertIMAGEiaga)}
-	ext,fun = ftypes(filetype)
+	ext,fun = ftypes[filetype]
 	
 	#list the files inside the input directory
-	files,fnames = ListDir(indir,True)
+	files,fnames = ListFiles(indir,True)
 	
 	#check file extensions
 	good = np.zeros(fnames.size,dtype='bool')
@@ -39,9 +39,10 @@ def ConvertDir(indir,outdir,filetype,Compress=True):
 		files = np.unique(newf)	
 		
 	else:
-		elen = len(ext) + 1
+		elen = len(ext)
 		for i in range(0,fnames.size):
 			e = fnames[i][-elen:]
+
 			if e == ext:
 				good[i] = True
 				
@@ -54,6 +55,7 @@ def ConvertDir(indir,outdir,filetype,Compress=True):
 	#convert each file
 	for i in range(0,n):
 		print('Converting file {:d} of {:d}'.format(i+1,n))
+		print(files[i])
 		fun(files[i],outdir,Compress)
 	
 
@@ -86,7 +88,8 @@ def ConvertCanopus(fname,outdir,Compress=True):
 	data = _ReadCanopus(fname)
 	
 	#save it
-	SaveData(data,oname,Compress)
+	if data.size > 0:
+		SaveData(data,oname,Compress)
 	
 	
 def ConvertCarisma1Hz(fname,outdir,Compress=True):
