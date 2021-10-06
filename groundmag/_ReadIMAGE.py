@@ -103,8 +103,10 @@ def _ReadIMAGE1s(fname):
 				('By','float64'),
 				('Bz','float64')]
 	
-	data = pf.ReadASCIIData(fname,Header=False,dtype=dtype0)
-
+	try:
+		data = pf.ReadASCIIData(fname,Header=False,dtype=dtype0)
+	except:
+		return np.recarray(0,dtype=dtype)
 
 	badx = data.Bx > 90000.0
 	bady = data.By > 90000.0

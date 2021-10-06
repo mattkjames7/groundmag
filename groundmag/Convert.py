@@ -2,6 +2,7 @@ import numpy as np
 from .ListFiles import ListFiles
 from ._ReadCarisma import _ReadCanopus,_ReadCarisma1Hz,_ReadCarisma8Hz
 from ._ReadIMAGE import _ReadIMAGE1s,_ReadIMAGEiaga
+from ._ReadIAGA2002 import _ReadIAGA2002
 from .SaveData import SaveData
 import os
 
@@ -15,7 +16,9 @@ def ConvertDir(indir,outdir,filetype,Compress=True):
 				'carisma1':('F01',ConvertCarisma1Hz),
 				'carisma8':('',ConvertCarisma8Hz),
 				'image1':('txt',ConvertIMAGE1Hz),
-				'image':('iaga',ConvertIMAGEiaga)}
+				'image':('iaga',ConvertIMAGEiaga),
+				'intermagnet60':('min',ConvertINTERMAGNET),
+				'intermagnet1':('sec',ConvertINTERMAGNET)}
 	ext,fun = ftypes[filetype]
 	
 	#list the files inside the input directory
@@ -51,6 +54,8 @@ def ConvertDir(indir,outdir,filetype,Compress=True):
 		n = files.size
 		
 	print('Found {:d} files to convert'.format(n))
+	srt = np.argsort(files)
+	files = files[srt]
 	
 	#convert each file
 	for i in range(0,n):
@@ -236,4 +241,55 @@ def ConvertIMAGEiaga(fname,outdir,Compress=True):
 		else:
 			#save it
 			SaveData(data,oname,Compress)					
+	
+
+def ConvertINTERMAGNET(fname,outdir,Compress=True):
+	'''
+	Convert intermagnet 1s or 60s data
+		
+	'''
+
+	tmp = fname.split('/')[-1]
+	iname,ext = tmp.split('.')
+	
+	#work out where date starts
+	I1 = iname.find('1')
+	I2 = iname.find('2')
+	if I1 == -1:
+		I = I2
+	elif I2 == -1:
+		I = I1
+	else:
+		I = np.min([I1,I2])
+	
+	date = iname[I:I+8]
+	year = date[:4]
+	stn = iname[:I].upper()
+	
+	#make sure the output directory exists
+	odir = outdir+'/{:s}/'.format(year)
+	if not os.path.isdir(odir):
+		os.system('mkdir -pv '+odir)
+	
+	#now check that the output file doesn't exist	
+	if ext == 'sec':
+		oname = odir + '{:s}-{:s}-1s.mag'.format(date,stn)
+	else:
+		oname = odir + '{:s}-{:s}-60s.mag'.format(date,stn)
+
+	if Compress:
+		if os.path.isfile(oname+'.gz'):
+			print('file exists...')
+			return
+	else:
+		if os.path.isfile(oname):
+			print('file exists...')
+			return
+
+	#read the data
+	data = _ReadIAGA2002(fname)
+	
+	#save it
+	if data.size > 0:
+		SaveData(data,oname,Compress)
 	

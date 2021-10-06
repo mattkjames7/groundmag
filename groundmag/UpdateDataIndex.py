@@ -11,6 +11,7 @@ def UpdateDataIndex():
 	
 	#get current index
 	idx = ReadDataIndex()	
+	ikeys = list(idx.keys())
 	ni = idx.size
 	
 	#list the files in the data directory
@@ -59,29 +60,39 @@ def UpdateDataIndex():
 	fnamese = np.array([f.split('.')[0] for f in fnames])
 	fnamess = np.array([f.split('-') for f in fnamese])
 	stns = np.array([f[1] for f in fnamess])
-	nidx = np.recarray(new.size,dtype=idx.dtype)
-	
-	nidx.File = fnames
-	nidx.Station = stns
-	nidx.SubDir = subdir
-	nidx.Date = dates
-	
+	Res = np.zeros(new.size,dtype='float32')
+
 	
 	for i in range(0,new.size):
 		print('\rObtaining time resolution ({:8.4f}%)'.format(100.0*(i+1)/new.size),end='')
 		if len(fnamess[i]) == 3:
-			nidx[i].Res = np.float32(fnamess[i][2].replace('s',''))
+			Res[i] = np.float32(fnamess[i][2].replace('s',''))
 		else:
 			s = _ReadBinaryFile(files[i],ReturnSize=True)
 			r = 86400/s
 			if r > 1:
 				r = np.round(r)
-			nidx[i].Res = r
+			Res[i] = r
 	print()
+	
+
+	#get unique staions
+	ustns = np.unique(stns)
+	for s in ustns:
+		print('Saving station: {:s}'.format(s))
+		use = np.where(stns == s)[0]
+	
+		nidx = np.recarray(use.size,dtype=idx.dtype)
 		
-	idx = RT.JoinRecarray(idx,nidx)
+		nidx.File = fnames[use]
+		nidx.Station = stns[use]
+		nidx.SubDir = subdir[use]
+		nidx.Date = dates[use]
 	
-	fname = Globals.DataPath + 'index.dat'
-	pf.WriteASCIIData(fname,idx)
+		if s in ikeys:
+			sidx = RT.JoinRecarray(idx[s],nidx)
 	
-	Globals.DataIndex = idx
+		fname = Globals.DataPath + 'Index/{:s}.dat'.format(s.upper())
+		pf.WriteASCIIData(fname,sidx)
+	print('done')
+	Globals.DataIndex = ReadDataIndex()
