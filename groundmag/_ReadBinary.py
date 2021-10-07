@@ -4,13 +4,14 @@ import os
 from .GetDataIndex import GetDataIndex
 from ._ReadBinaryFile import _ReadBinaryFile
 
-def _ReadBinary(Station,Date,PreferredRes='min'):
+def _ReadBinary(Station,Date,PreferredRes='min',ReturnSize=False):
 	'''
 	Read binary mag data.
 	
 	'''
 	#get the data index
 	idx = GetDataIndex()
+	idx = idx[Station]
 	use = np.where((idx.Date == Date))[0]
 	idx = idx[use]
 	use = np.where((idx.Station == Station))[0]
@@ -23,7 +24,7 @@ def _ReadBinary(Station,Date,PreferredRes='min'):
 	use = np.array([use])
 	idx = idx[use]
 	
-	data = _ReadBinaryFile(Globals.DataPath + idx[0].SubDir + idx[0].File)
+	data = _ReadBinaryFile(Globals.DataPath + idx[0].SubDir + idx[0].File,ReturnSize=ReturnSize)
 	return data
 	
 def _ReadBinaryOld(Station,Date):
