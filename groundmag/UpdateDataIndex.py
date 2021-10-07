@@ -130,6 +130,8 @@ def UpdateDataIndex(Station=None,UpdateResolution=True,Verbose=True):
 		elif not idxs is None:
 			sidx = RT.JoinRecarray(sidx,idxs)
 			save = True
+		else:
+			save = True
 		
 		if UpdateResolution and not sidx is None:
 			bad = np.where(sidx.Res <= 0)[0]
