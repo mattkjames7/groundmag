@@ -6,7 +6,6 @@ import aacgmv2
 
 def GetStationInfo(Station=None,Date=None):
 	
-	
 	if Station is None:
 		out = Globals.Stations
 	else:

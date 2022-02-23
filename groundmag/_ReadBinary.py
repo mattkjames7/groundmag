@@ -16,6 +16,11 @@ def _ReadBinary(Station,Date,PreferredRes='min',ReturnSize=False):
 	idx = idx[use]
 	use = np.where((idx.Station == Station))[0]
 	idx = idx[use]
+	if use.size == 0:
+		dtype = [('Date','int32'),('ut','float64'),('Bx','float64'),('By','float64'),('Bz','float64')]
+		return np.recarray(0,dtype=dtype)
+			
+	
 	if PreferredRes == 'min':
 		use = np.argmin(idx.Res)
 	else:

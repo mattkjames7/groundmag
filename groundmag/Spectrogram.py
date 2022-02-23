@@ -3,16 +3,20 @@ import matplotlib.pyplot as plt
 import wavespec as ws
 from .GetData import GetData
 
-def Spectrogram(Station,Date,wind,slip,ut=None,high=None,low=None,comp='Bx',Freq=None,Method='FFT',WindowFunction=None,Param=None,Detrend=True,FindGaps=True,GoodData=None,Quiet=True,LenW=None):
+def Spectrogram(Station,Date,wind,slip,**kwargs):
 	
+	ut = kwargs.get('ut',None)
+	high = kwargs.get('high',None)
+	low = kwargs.get('low',None)
+	comp = kwargs.get('comp','Bx')
 	
 	#get the data
 	data = GetData(Station,Date,ut,high,low)
 	
 	
 	#get the spectrogram
-	Nw,LenW,Freq,Spec = ws.Spectrogram.Spectrogram(data.utc*3600.0,data[comp],wind,slip,Freq,Method,WindowFunction,Param,Detrend,FindGaps,GoodData,Quiet,LenW,OneSided=True)
+	return ws.Spectrogram.Spectrogram(data.utc*3600.0,
+						data[comp],wind,slip,**kwargs)
 	
 	
 
-	return Nw,LenW,Freq,Spec

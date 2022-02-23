@@ -3,8 +3,9 @@ from .ListFiles import ListFiles
 import DateTimeTools as TT
 from . import Globals
 import os
+from .GetDataIndex import GetDataIndex
 
-def GetDataAvailability(Station,Date=None):
+def GetDataAvailability(Station,Date=None,Quiet=False,Res='any'):
 	'''
 	Scan for available data within $GROUNDMAG_DATA.
 	
@@ -46,27 +47,33 @@ def GetDataAvailability(Station,Date=None):
 	
 	'''
 
-	#scan for all files
-	files,fnames = ListFiles(Globals.DataPath,True)
+	#get the data index
+	idx = GetDataIndex()
 	
-	#reduce to just those for the specified station
 	stn = Station.upper()
-	isstn = np.array([(stn in f) and ('.mag.gz' in  f) for f in fnames])
-	use = np.where(isstn)[0]
-	fnames = fnames[use]
-	nf = fnames.size
-
-	#now list the dates
-	fdates = np.array([np.int32(f[:8]) for f in fnames])
-	fdates.sort()	
+	if not stn in list(idx.keys()):
+		if not Quiet:
+			print('Station {:s} not found'.format(Station))
+		if Date is None:
+			return np.array([False])
+		else:
+			return np.array([Date]),np.array([False])
 	
+	fdates = idx[stn].Date
+	idxs = idx[stn]
 	
-	
+	if not Res == 'any':
+		if np.size(Res) == 1:
+			use = np.where(idxs.Res == Res)[0]
+		else:
+			use = np.where((idxs.Res >= Res[0]) & (idxs.Res <= Res[1]))[0]
+		idxs = idxs[use]
+		fdates = idxs.Date
+		
 
 	#if Date is set to None, then look for all files for a station
 	if Date is None:
-		if use.size > 0:
-			return fdates
+		return fdates
 	else:
 		#otherwise, let's get a list of dates and check if they exist
 		if np.size(Date) == 1:

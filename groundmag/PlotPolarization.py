@@ -22,10 +22,10 @@ def PlotPolarization(Station,Date,wind,slip,ut=None,high=None,low=None,Freq=None
 
 
 	#get the spectrogram
-	Nw,LenW,Freq,Spec = Spectrogram3D(Station,Date,wind,slip,ut=ut,high=high,low=low,Freq=Freq,Method=Method,WindowFunction=WindowFunction,Param=Param,Detrend=Detrend,FindGaps=FindGaps,GoodData=None)
+	Nw,Freq,Spec = Spectrogram3D(Station,Date,wind,slip,ut=ut,high=high,low=low,Freq=Freq,Method=Method,WindowFunction=WindowFunction,Param=Param,Detrend=Detrend,FindGaps=FindGaps,GoodData=None)
 	
 	#combine the appropriate components
-	P = Spec[comps[0]+'Pow'] + Spec[comps[1]+'Pow']
+	P = Spec[comps[0]+comps[1]+'Pow']
 	
 	#now find the most powerful peak along the time axis
 	pk = ws.DetectWaves.DetectWavePeaks(Spec.Tspec,Freq,P,Threshold,True)

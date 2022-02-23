@@ -5,7 +5,7 @@ from .UTPlotLabel import UTPlotLabel
 from .GetStationInfo import GetStationInfo
 from .GetData import GetData
 
-def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False,useytitle=False,nolegend=False,coords='hdz',RemoveMean=True):
+def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','Bm'],high=None,low=None,nox=False,useytitle=False,nolegend=False,coords='hdz',RemoveMean=True,data=None):
 	'''
 	
 	'''
@@ -17,7 +17,8 @@ def PlotData(Station,Date,ut=None,fig=None,maps=[1,1,0,0],comp=['Bx','By','Bz','
 	pos = '(mlat={:3.1f},mlon={:3.1f})'.format(stn.mlat[0],stn.mlon[0])
 	
 	#Read data
-	data = GetData(Station,Date,ut,high,low,coords=coords)
+	if data is None:
+		data = GetData(Station,Date,ut,high,low,coords=coords)
 	
 	
 	#check if data are filtered
