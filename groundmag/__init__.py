@@ -34,3 +34,5 @@ from ._ReadIAGA2002 import _ReadIAGA2002
 from .ListFiles import ListFiles
 from .GetChain import GetLatChain,GetLonChain
 from .SpecPolarization import SpecPolarization,FullSpecPolarization
+
+from . import Trace
