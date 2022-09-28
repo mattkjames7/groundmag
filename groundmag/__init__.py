@@ -36,3 +36,4 @@ from .GetChain import GetLatChain,GetLonChain
 from .SpecPolarization import SpecPolarization,FullSpecPolarization
 
 from . import Trace
+from . import Tools

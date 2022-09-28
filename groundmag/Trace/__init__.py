@@ -6,3 +6,5 @@ from .SaveMagTraces import SaveMagTraces
 from .SaveMagPairTraces import SaveMagPairTraces
 from .ReadMagTraces import ReadMagTraces
 from .ReadMagPairTraces import ReadMagPairTraces
+from .InterpMagFP import InterpMagFP
+from .InterpMagPairFP import InterpMagPairFP
