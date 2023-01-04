@@ -27,7 +27,7 @@ def InterpMagPairFP(*args,Model='TS05'):
 	
 	'''
 	
-	if len(args) == 1:
+	if len(args) == 3:
 		estn,pstn,utc = args
 		Date,ut = TT.ContUTtoDate(utc)
 	else:
@@ -37,6 +37,8 @@ def InterpMagPairFP(*args,Model='TS05'):
 	DateLim = [Date.min(),Date.max()]
 	
 	T = ReadMagPairTraces(estn,pstn,DateLim,Model=Model)
+	if T is None:
+		return None
 		
 	out = np.recarray(utc.size,dtype=T.dtype)
 	out.Date = Date

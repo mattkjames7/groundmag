@@ -13,6 +13,6 @@ def TraceMagPair(estn,pstn,Date,ut,Model='TS05'):
 	x,y,z = MagPairTracePos(estn,pstn,Date,ut)
 
 	#do the trace!
-	T = gp.TraceField(x,y,z,Date,ut,Model=Model)
+	T = gp.TraceField(x,y,z,Date,ut,Model=Model,CoordIn='GSE',alpha=[])
 	
 	return T

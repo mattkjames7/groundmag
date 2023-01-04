@@ -7,7 +7,7 @@ import RecarrayTools as RT
 
 def SaveMagPairTraces(estn,pstn,Date,Model='TS05'):
 	
-	ut = np.arange(1440)/60.0
+	ut = np.arange(288)/12.0
 	
 	T = TraceMagPair(estn,pstn,Date,ut,Model=Model)
 	
@@ -28,7 +28,7 @@ def SaveMagPairTraces(estn,pstn,Date,Model='TS05'):
 				('MltS','float32'),
 				('MltE','float32'),
 				('Lshell','float32')]
-	data = np.recarray(1440,dtype=dtype)
+	data = np.recarray(ut.size,dtype=dtype)
 		
 	fields = data.dtype.names
 	for f in fields:

@@ -5,7 +5,7 @@ import RecarrayTools as RT
 import os
 
 def _ReadMagPairTraceFile(estn,pstn,Date,Model):
-	
+
 	fpath = Globals.DataPath + 'Traces/{:s}/{:s}-{:s}/'.format(Model,estn,pstn)	
 	fname = fpath + '{:08d}.bin'.format(Date)	
 	
@@ -19,7 +19,7 @@ def _ReadMagPairTraceFile(estn,pstn,Date,Model):
 	return out
 	
 
-def ReadMagPairTraces(estn,pstn,Date,Model='TS05'):
+def ReadMagPairTraces(estn,pstn,Date,ut=[0.0,24.0],Model='TS05'):
 	
 	if np.size(Date) == 1:
 		dates = np.array(Date).flatten()
@@ -46,9 +46,17 @@ def ReadMagPairTraces(estn,pstn,Date,Model='TS05'):
 			tmp = datalist[i]
 			data[p:p+tmp.size] = tmp
 			p += tmp.size
-		return data
 	else:
 		return None
-	
+
+	#limit time
+	datelim = [dates.min(),dates.max()]
+	utclim = TT.ContUT(datelim,ut)
+
+	use = np.where((data.utc >= utclim[0]) & (data.utc <= utclim[1]))[0]
+	data = data[use]
+
+	return data
+
 
 	

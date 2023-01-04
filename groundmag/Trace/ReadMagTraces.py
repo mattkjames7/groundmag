@@ -19,7 +19,7 @@ def _ReadMagTraceFile(stn,Date,Model):
 	return out
 	
 
-def ReadMagTraces(stn,Date,Model='TS05'):
+def ReadMagTraces(stn,Date,ut=[0.0,24.0],Model='TS05'):
 	
 	if np.size(Date) == 1:
 		dates = np.array(Date).flatten()
@@ -46,9 +46,16 @@ def ReadMagTraces(stn,Date,Model='TS05'):
 			tmp = datalist[i]
 			data[p:p+tmp.size] = tmp
 			p += tmp.size
-		return data
 	else:
 		return None
-	
+
+	#limit time
+	datelim = [dates.min(),dates.max()]
+	utclim = TT.ContUT(datelim,ut)
+
+	use = np.where((data.utc >= utclim[0]) & (data.utc <= utclim[1]))[0]
+	data = data[use]
+
+	return data
 
 	
