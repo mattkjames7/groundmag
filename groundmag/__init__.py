@@ -37,3 +37,9 @@ from .SpecPolarization import SpecPolarization,FullSpecPolarization
 
 from . import Trace
 from . import Tools
+
+
+from .ReadMagie import ReadMagie
+
+
+from . import CP
