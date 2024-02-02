@@ -56,7 +56,7 @@ import groundmag as gm
 dates = gm.GetDataAvailability("han")
 
 # plot availability for a number of stations
-gm.PlotDataAvailability(["han","tar","pel","muo"])
+gm.PlotDataAvailability(["han","tar","pel","muo"],[20010101,20021231])
 ```
 
 ### Reading data for a single station
