@@ -29,6 +29,7 @@ setuptools.setup(
 		'wavespec>=0.0.4',
 		'RecarrayTools',
 		'PyFileIO',
+        "PyGeopack"
 	],
 	include_package_data=True,
 )
